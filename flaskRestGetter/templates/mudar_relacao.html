@@ -1,0 +1,32 @@
+{% extends "baseLogado.html" %}
+
+{% block title %} Add Relação {% endblock %}
+
+{% block content %}
+
+<section class="mudarRel">
+    <h1 class="tituloGenerico">MUDAR RELAÇÃO</h1>
+{% for i in maquinas %}
+    {% if i in maquinasrel%}
+    <p class="TextoComum">{{i.nome}}<button class="removerRel" onclick = "add_relacao({{i.id}})"> Remover Relação</button></p>
+    {% else %}
+    <p class="TextoComum">{{i.nome}}<button class="adicionarRel" onclick = "add_relacao({{i.id}})"> Adicionar Relação</button></p>
+    {% endif %}
+{% endfor %}
+</section>
+
+    <script>
+        function add_relacao(id){
+            fetch("{{url_for('add_rel', id = id)}}"+id,{
+                method:"POST"
+            }).then(response =>{
+                if (response.ok){
+                    window.location.reload();
+                }
+                else{
+                    console.log("ocorreu algum erro");
+                }
+            });
+        }
+    </script>
+{% endblock %}

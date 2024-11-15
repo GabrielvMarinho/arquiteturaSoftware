@@ -1,0 +1,17 @@
+{% extends "baseLogado.html" %}
+
+{% block title %} Add Relação {% endblock %}
+
+{% block content %}
+<section class="historicoSection">
+<h1 class="tituloGenerico">HISTÓRICO DE NOTIFICAÇÕES</h1>
+<section class="sectionHistorico">
+    {% for i in notificacoes %}
+    <div class="historico">
+        <p>{{i.data}}</p>
+        <p>{{i.dados}}</p>
+    </div>
+    {% endfor %}
+</section>
+    
+{% endblock %}

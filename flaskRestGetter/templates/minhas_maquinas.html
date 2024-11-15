@@ -1,0 +1,14 @@
+{% extends "baseLogado.html" %}
+{% block title %} Lista {% endblock %}
+
+
+
+{% block content %}
+<section class="section_minhas_maquinas"> 
+    <h1 class="tituloGenerico">SUAS MÁQUINAS</h1>
+    {% for i in maquinas %}
+        <p class="TextoComum">{{i.nome}}</p>
+    {% endfor %}
+
+</section>
+{% endblock %}

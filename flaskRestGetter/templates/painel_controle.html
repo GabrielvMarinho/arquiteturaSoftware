@@ -1,0 +1,149 @@
+{% extends "baseLogado.html" %}
+
+{% block title %} Painel de Controle {% endblock %}
+
+{% block content %}
+<section class="sectionPainelDeControle">
+    <!-- <h2>voce foi logado {{current_user.username}}</h2>
+     -->
+    <section class="conteudoPagina">
+        <div id="graficos"></div>
+        <div id="notificacoes">
+            <h1 class="tituloNotif">NOTIFICAÇÕES</h1>
+        </div>
+    </section>
+    
+    
+</section>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+
+    //criando os gráficos uma única vez
+    var maquinas = {{ maquinas|tojson }};
+
+    maquinas.forEach(m => {
+
+
+        const div = document.getElementById("graficos");
+
+        const divx = document.createElement("div")
+
+        divx.innerHTML =`
+            <div class="divMaquina" id="divMaquina${m.id}">
+                <h3>${m.nome}</h3>
+                <canvas id="canvas${m.id}"></canvas>
+            </div>
+            `
+        div.appendChild(divx)
+
+        var c = document.getElementById(`canvas${m.id}`)
+
+        var chart1 =new Chart(c, {
+            type: 'polarArea',
+            data: {
+                labels: m.dados,
+                datasets: [{
+                    backgroundColor: 'rgba(61, 68, 163, 0.4\)', // cor de preenchimento das barras
+                    borderColor: 'rgba(61, 68, 163, 0.9)',       // cor da borda das barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                            beginAtZero:true,
+                            pointLabels: {
+                                color: 'white'
+                            },
+                        }
+                    
+                },
+                plugins:{
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw; // Mostra o valor do dado
+                                return label;
+                            },
+                            title: function(context) {
+                                return context[0].label; // Mostra o valor da label
+                            }
+                        }
+                    }
+
+                }
+            }
+        });
+        console.log(chart1)
+        
+
+    });
+    
+    //trabalhando com a conexão dos quartos
+    const socket = io({autoConnect: false});
+    socket.connect();
+    var id = {{current_user.id}}
+    //conectando ao quarto do user específico
+    socket.emit("user_join", id);
+
+    const grande = "{{ url_for('static', filename='img/caveira-e-ossos.png') }}";
+    const medio = "{{ url_for('static', filename='img/aviso.png') }}";
+    const pequeno = "{{ url_for('static', filename='img/aviso2.png') }}";
+
+    //socket on para receber as notificações
+    socket.on("notificacoes", (obj)=>{
+        console.log(obj["mensagem"])
+        var tipoMensagem=obj["tipoMensagem"]
+        console.log(tipoMensagem)
+
+        const url = tipoMensagem === "Grande"? grande : tipoMensagem === "Médio" ? medio : pequeno
+
+        const notif = document.getElementById("notificacoes")
+        const div = document.createElement("div")
+        div.classList = `notificacao ${tipoMensagem}`
+        div.innerHTML = `
+            <img class = "icone" src=${url}> 
+            <div class="separaIconeTexto">
+                <h1 class="texto">${obj["mensagem"]}</h1>
+                <h2 class="mensagem">${obj["mensagem1"]}</h2>
+                <h2 class="status">${obj["mensagem2"]}</h2>
+
+            </div>
+        `
+        notif.insertBefore(div, notif.children[1]);
+
+    })
+
+    //atualizar os gráficos toda vez que for mandado dado novo graficos
+    socket.on('atualizar_dados', (dados)=> {
+        console.log("chamou")
+        Object.entries(dados).forEach(([chave, valor])=>{
+            const c = Chart.getChart(`canvas${chave}`)
+            c.data.datasets[0].data = valor;
+            c.update();
+
+        });
+        
+    });
+    
+
+    
+    
+    
+
+</script>
+
+{% endblock %}

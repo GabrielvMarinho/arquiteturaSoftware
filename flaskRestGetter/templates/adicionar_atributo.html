@@ -1,0 +1,61 @@
+{% extends "baseLogado.html" %}
+
+{% block title %} Add Dados {% endblock %}
+
+{% block content %}
+<section class="formCriarAtributo">
+<h1 class="tituloGenerico"> ADICIONAR ATRIBUTOS </h1>
+<form method="post" class="formAtributos">
+    {{ form.hidden_tag() }}
+    
+
+    <div class="nomeAtributos">
+        {{form.nomedado.label(class="nomeatributo")}}
+        {{form.nomedado(class="caixaNomeAtributos")}}
+    </div> 
+
+    <div class="divMineMax"> 
+        
+    <div class="atributosMinimos"> 
+        <div>
+            {{form.minMaquina.label(class="nomeatributo")}}
+            {{form.minMaquina(class="caixaNomeAtributosMaior")}}
+        </div> 
+    
+        <div>
+            {{form.msgErroMin.label(class="nomeMensagemErro")}} 
+            {{form. msgErroMin(class="caixaNomeAtributosMaior")}}
+        </div>
+
+        <div class="grauImportanciaAtributos">
+            {{ form.optionMin.label }} 
+            {{ form.optionMin() }} 
+        </div>
+    </div>
+
+
+    <div class="atributosMaximos"> 
+        <p>
+            {{form. maxMaquina.label(class="nomeatributo")}}
+            {{form. maxMaquina(class="caixaNomeAtributosMaior")}}
+        </p>
+    
+        <p>
+            {{form. msgErroMax.label(class="nomeMensagemErro")}} 
+            {{form. msgErroMax( class="caixaNomeAtributosMaior")}}
+        </p>
+    
+       
+        <div class="grauImportanciaAtributos">
+            {{ form.optionMax.label}}
+            {{ form.optionMax() }}
+        </div>
+
+    </div>
+    </div> 
+
+
+    <div > {{form.submit(class="botaoForm")}} </div>
+</form>
+</section>
+{% endblock %}

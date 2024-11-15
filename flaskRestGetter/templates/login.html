@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+
+<div class="divLogin"> 
+    <h2 class="nomeLogin"> LOGIN </h2>
+<form method="post" class="form">
+    {{ form.hidden_tag() }}
+    <div class="boxname">
+        {{form.username.label(class="labelform")}}
+        {{form.username(class="boxForm")}}
+    </div> 
+
+    <div class="boxname">
+        {{form.password.label(class="labelform")}}
+        {{form.password(class="boxForm")}}
+    </div>
+
+    <div>
+        {{form.submit(class="botaoForm")}}
+    </div>
+
+</form>
+<a href="{{url_for('signup')}}" class="boxcadastrologinform">fazer cadastro</a>
+</div>
+
+{% endblock %}

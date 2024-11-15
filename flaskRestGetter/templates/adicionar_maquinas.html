@@ -1,0 +1,21 @@
+{% extends "baseLogado.html" %}
+
+{% block title %} Add Máquinas {% endblock %}
+
+{% block content %}
+
+<section class="adicionarMaquina">
+    <h1 class="tituloGenerico"> CRIAR MÁQUINAS</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{form.nome.label}} <br>
+            {{form.nome(class="caixaNomeAtributos")}}
+        </p> 
+        <br>
+
+        <p> {{form.submit(class="botaoForm")}} </p>
+    </form>
+</section>
+
+{% endblock %}
